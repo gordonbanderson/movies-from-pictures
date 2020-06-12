@@ -1,0 +1,14 @@
+{
+    "name": "suilven/movies-from-pictures",
+    "description": "Generate movies from groups of similar images identified by perceptive hash",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gordon Anderson",
+            "email": "gordon.b.anderson@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
