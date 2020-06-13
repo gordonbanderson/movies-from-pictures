@@ -38,6 +38,28 @@ class HashGroupingTask
         $this->connection->connect();
         $buckets = $this->groupByHash();
         \error_log(\print_r($buckets, true));
+        $this->generateHTML($buckets);
+    }
+
+
+    private function generateHTML($buckets)
+    {
+        error_log('BUCKET SIZE: ' . sizeof($buckets));
+
+        $loader = new \Twig\Loader\FilesystemLoader(getcwd() . '/templates');
+        $twig = new \Twig\Environment($loader, [
+            'cache' => '/tmp/twig',
+        ]);
+
+
+        $html = $twig->render('index.html.twig', [
+            'title' => 'Buckets List',
+            'buckets' => $buckets,
+            'pictureDirectory' => $this->pictureDirectory
+        ]);
+
+        $path = $this->pictureDirectory . '/grouping.html';
+        file_put_contents($path, $html);
     }
 
 
