@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+
+    <style>
+        ul {
+            list-style-type: none;
+            clear: both;
+        }
+        li {
+            float: left;
+        }
+    </style>
+</head>
+<body>
+<h1>{{ title }}</h1>
+
+{% for bucket in buckets %}
+<hr/>
+    <ul>
+    {% for photo in bucket %}
+        <li><img src="./thumbs/{{  photo.filename }}" /></li>
+    {% endfor %}
+    </ul>
+
+{% endfor %}
+
+
+</body>
+</html>
