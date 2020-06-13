@@ -122,6 +122,18 @@ class Connection
     }
 
 
+    public function updateHash($id, $hash)
+    {
+        $data = [
+            'hash' => $hash,
+            'id' => $id
+        ];
+        $sql = "UPDATE photos SET hash=:hash WHERE id=:id";
+        $stmt= $this->pdo->prepare($sql);
+        $stmt->execute($data);
+    }
+
+
     private function createPhotosTableIfNotExists(): void
     {
         $sql = "CREATE TABLE IF NOT EXISTS photos (

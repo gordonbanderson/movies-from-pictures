@@ -31,4 +31,12 @@ trait TerminalHelper
             $this->tick();
         }
     }
+
+
+    private function borderedTitle($message)
+    {
+        $this->climate->border();
+        $this->climate->info($message);
+        $this->climate->border();
+    }
 }

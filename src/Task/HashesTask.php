@@ -4,9 +4,12 @@ namespace Suilven\MoviesFromPictures\Task;
 
 use League\CLImate\CLImate;
 use Suilven\MoviesFromPictures\Database\Connection;
+use Suilven\MoviesFromPictures\Terminal\TerminalHelper;
 
 class HashesTask
 {
+    use TerminalHelper;
+
     /** @var \League\CLImate\CLImate */
     private $climate;
 
@@ -54,19 +57,24 @@ class HashesTask
         $photos = $this->connection->getPhotos();
 
         $this->climate->border();
+        $ctr = 0;
+        $amount = sizeof($photos);
+        $this->borderedTitle('Calculationg hash for ' . $amount . ' images');
+        $progress = $this->climate->progress()->total($amount);
         foreach ($photos as $photo) {
             $id = $photo['id'];
+            if (is_null($photo['hash'])) {
+                $cmd = '/usr/local/bin/blockhash.py ' . $this->pictureDirectory . '/thumbs/' . $photo['filename'];
+                $output = [];
+                exec($cmd, $output);
+                $hashAndFile = $output[0];
+                $splits = explode(' ', $hashAndFile);
+                $hash = $splits[0];
+                $this->connection->updateHash($id, $hash);
+            }
 
-
-            $cmd = '/usr/local/bin/blockhash.py ' . $this->pictureDirectory . '/' . $photo['filename'];
-            $this->climate->info($cmd);
-            $output = [];
-            exec($cmd, $output);
-            error_log(print_r($output, true));
-            $hashAndFile = $output[0];
-            $splits = explode(' ', $hashAndFile);
-            $hash = $splits[0];
-            error_log('HASH: ' . $hash);
+            $ctr++;
+            $progress->current($ctr);
         }
     }
 }
