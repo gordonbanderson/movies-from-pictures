@@ -5,15 +5,10 @@
     <title>{{ title }}</title>
 
     <style>
-        ul {
-            list-style-type: none;
+        .bucket {
+            border-bottom: solid #AAA 2px;
             clear: both;
-            padding-bottom: 50px;
-        }
-        li {
-            float: left;
-            display: inline-block;
-            padding-right: 4px;
+            padding: 8px 0px;
         }
     </style>
 </head>
@@ -21,11 +16,11 @@
 <h1>{{ title }}</h1>
 
 {% for bucket in buckets %}
-    <ul>
+    <div class="bucket">
     {% for photo in bucket %}
-        <li><img src="./thumbs/{{  photo.filename }}" /></li>
+        <img src="./thumbs/{{  photo.filename }}" />
     {% endfor %}
-    </ul>
+    </div>
 
 {% endfor %}
 
