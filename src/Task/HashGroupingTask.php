@@ -8,6 +8,7 @@ use Suilven\MoviesFromPictures\Terminal\TerminalHelper;
 
 class HashGroupingTask
 {
+
     use TerminalHelper;
 
     /** @var \League\CLImate\CLImate */
@@ -36,10 +37,11 @@ class HashGroupingTask
         $this->connection = new Connection($this->pictureDirectory);
         $this->connection->connect();
         $buckets = $this->groupByHash();
-        error_log(print_r($buckets, true));
+        \error_log(\print_r($buckets, true));
     }
 
 
+    /** @return array */
     private function groupByHash(): array
     {
         $this->borderedTitle('Grouping by Perceptive Hash');
@@ -53,10 +55,10 @@ class HashGroupingTask
 
         $currentBucket = [];
         $buckets = [];
-        for ($i = 1; $i < count($photos) - 1; $i++) {
+        for ($i = 1; $i < \count($photos) - 1; $i++) {
             $this->climate->info('Checking file ' . $photos[$i]['filename']);
             // if the bucket is empty, start with the current image
-            if (empty($currentBucket)) {
+            if (\sizeof($currentBucket) === 0) {
                 $currentBucket[] = [
                     'filename' => $photos[$i]['filename'],
                    // 'rotated' => $hashes[$i]['Rotated']
@@ -64,7 +66,7 @@ class HashGroupingTask
             }
             $hash0 = $photos[$i]['hash'];
             $hash1 = $photos[$i + 1]['hash'];
-            $id = $photos[$i]['ID'];
+            $id = $photos[$i]['id'];
             $distance = $this->hammingDist($hash0, $hash1);
 
             $this->climate->info($i . ': D=' . $distance);
@@ -72,15 +74,16 @@ class HashGroupingTask
             // if we are within tolerance, add to the bucket
             if ($distance < $tolerance) {
                 $currentBucket[] = [
+                    'id' => $id,
                     'filename' => $photos[$i]['filename'],
                     //'rotated' => $photos[$i]['Rotated']
                 ];
             } else {
                 // we need to save the current bucket if it's long enough
-                if (sizeof($currentBucket) < $minLength) {
-                    error_log('Bucket created but is too short');
+                if (\sizeof($currentBucket) < $minLength) {
+                    $this->climate->blue('Bucket created but is too short');
                 } else {
-                    error_log('Adding bucket');
+                    $this->climate->blue('Adding bucket of size ' . \sizeof($currentBucket));
                     $buckets[] = $currentBucket;
                 }
                 $currentBucket = [];
@@ -88,10 +91,10 @@ class HashGroupingTask
         }
 
         // add the last bucket if it's long enough
-        if (sizeof($currentBucket) < $minLength) {
-            error_log('Bucket created but is too short');
+        if (\sizeof($currentBucket) < $minLength) {
+            \error_log('Bucket created but is too short');
         } else {
-            error_log('Adding bucket');
+            \error_log('Adding bucket');
             $buckets[] = $currentBucket;
         }
 
@@ -101,23 +104,25 @@ class HashGroupingTask
     }
 
 
-    /*
-     * Convert hex strings to binary and then calculate hamming distance
-     * @param $hash1 hex string for perceptive hash
-     * @param $hash2 hex string for perceptive hash
+    /**
+     * @param string $hash1 a hash in hexadecimal format
+     * @param string $hash2 a hash in hexadecimal format
+     * @return int the hamming distance between the hashes
      */
-    private function hammingDist($hash1, $hash2)
+    private function hammingDist(string $hash1, string $hash2): int
     {
         $binaryHash1 = $this->hexHashToBinary($hash1);
         $binaryHash2 = $this->hexHashToBinary($hash2);
 
         $i = 0;
         $count = 0;
-        while (isset($binaryHash1[$i]) != '') {
-            if ($binaryHash1[$i] != $binaryHash2[$i])
+        while (isset($binaryHash1[$i])) {
+            if ($binaryHash1[$i] !== $binaryHash2[$i]) {
                 $count++;
+            }
             $i++;
         }
+
         return $count;
     }
 
@@ -126,24 +131,25 @@ class HashGroupingTask
      * @param string $hash a hexidecimal hash in lowercase
      * @return string a binary string of 1s and 0s
      */
-    private function hexHashToBinary($hash)
+    private function hexHashToBinary(string $hash): string
     {
-        $binaryHash = str_replace('0', '0000', $hash);
-        $binaryHash = str_replace('1', '0001', $binaryHash);
-        $binaryHash = str_replace('2', '0010', $binaryHash);
-        $binaryHash = str_replace('3', '0011', $binaryHash);
-        $binaryHash = str_replace('4', '0100', $binaryHash);
-        $binaryHash = str_replace('5', '0101', $binaryHash);
-        $binaryHash = str_replace('6', '0110', $binaryHash);
-        $binaryHash = str_replace('7', '0111', $binaryHash);
-        $binaryHash = str_replace('8', '1000', $binaryHash);
-        $binaryHash = str_replace('9', '1001', $binaryHash);
-        $binaryHash = str_replace('a', '1010', $binaryHash);
-        $binaryHash = str_replace('b', '1011', $binaryHash);
-        $binaryHash = str_replace('c', '1100', $binaryHash);
-        $binaryHash = str_replace('d', '1101', $binaryHash);
-        $binaryHash = str_replace('e', '1110', $binaryHash);
-        $binaryHash = str_replace('f', '1111', $binaryHash);
+        $binaryHash = \str_replace('0', '0000', $hash);
+        $binaryHash = \str_replace('1', '0001', $binaryHash);
+        $binaryHash = \str_replace('2', '0010', $binaryHash);
+        $binaryHash = \str_replace('3', '0011', $binaryHash);
+        $binaryHash = \str_replace('4', '0100', $binaryHash);
+        $binaryHash = \str_replace('5', '0101', $binaryHash);
+        $binaryHash = \str_replace('6', '0110', $binaryHash);
+        $binaryHash = \str_replace('7', '0111', $binaryHash);
+        $binaryHash = \str_replace('8', '1000', $binaryHash);
+        $binaryHash = \str_replace('9', '1001', $binaryHash);
+        $binaryHash = \str_replace('a', '1010', $binaryHash);
+        $binaryHash = \str_replace('b', '1011', $binaryHash);
+        $binaryHash = \str_replace('c', '1100', $binaryHash);
+        $binaryHash = \str_replace('d', '1101', $binaryHash);
+        $binaryHash = \str_replace('e', '1110', $binaryHash);
+        $binaryHash = \str_replace('f', '1111', $binaryHash);
+
         return $binaryHash;
     }
 }
