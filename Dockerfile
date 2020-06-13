@@ -2,11 +2,13 @@ FROM php:7.4-cli-buster
 
 RUN apt -y update && apt -y upgrade
 RUN apt search libxslt1.1
-RUN apt -y install figlet git zip unzip python3-pil python3-pip
+RUN apt -y install figlet git zip unzip python3-pil python3-pip imagemagick mencoder zlib1g-dev libjpeg-dev rename
 
 # Install perceptive hasher in /usr/local/bin
 RUN git clone https://github.com/commonsmachinery/blockhash-python.git && \
     cd blockhash-python && python3 setup.py install cd .. && rm -rf blockhash-python
+
+RUN pip3 install imgp
 
 # alter bash prompt
 ENV PS1A="\u@moviesfrompictures:\w> "
