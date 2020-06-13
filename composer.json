@@ -9,6 +9,17 @@
             "email": "gordon.b.anderson@gmail.com"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Suilven\\MoviesFromPictures\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Suilven\\MoviesFromPictures\\": "tests"
+        }
+    },
+
     "require-dev": {
         "php-parallel-lint\/php-parallel-lint": "^1.2",
         "php-parallel-lint\/php-console-highlighter": "^0.5.0",
