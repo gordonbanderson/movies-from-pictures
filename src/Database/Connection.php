@@ -122,11 +122,15 @@ class Connection
     }
 
 
-    public function updateHash($id, $hash)
+    /**
+     * @param int $id database id of the image to update
+     * @param string $hash perception hash string returned from blockhash.py
+     */
+    public function updateHash(int $id, string $hash): void
     {
         $data = [
             'hash' => $hash,
-            'id' => $id
+            'id' => $id,
         ];
         $sql = "UPDATE photos SET hash=:hash WHERE id=:id";
         $stmt= $this->pdo->prepare($sql);

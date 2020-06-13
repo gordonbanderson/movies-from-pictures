@@ -33,7 +33,12 @@ trait TerminalHelper
     }
 
 
-    private function borderedTitle($message)
+    /**
+     * Display a message in ther terminal with a preceeding and following border to highlight it
+     *
+     * @param string $message message to display
+     */
+    private function borderedTitle(string $message): void
     {
         $this->climate->border();
         $this->climate->info($message);

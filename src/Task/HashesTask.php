@@ -8,6 +8,7 @@ use Suilven\MoviesFromPictures\Terminal\TerminalHelper;
 
 class HashesTask
 {
+
     use TerminalHelper;
 
     /** @var \League\CLImate\CLImate */
@@ -58,17 +59,18 @@ class HashesTask
 
         $this->climate->border();
         $ctr = 0;
-        $amount = sizeof($photos);
+        $amount = \sizeof($photos);
         $this->borderedTitle('Calculationg hash for ' . $amount . ' images');
         $progress = $this->climate->progress()->total($amount);
         foreach ($photos as $photo) {
             $id = $photo['id'];
-            if (is_null($photo['hash'])) {
+            // @phpstan-ignore-next-line @todo Fix this
+            if (\is_null($photo['hash'])) {
                 $cmd = '/usr/local/bin/blockhash.py ' . $this->pictureDirectory . '/thumbs/' . $photo['filename'];
                 $output = [];
-                exec($cmd, $output);
+                \exec($cmd, $output);
                 $hashAndFile = $output[0];
-                $splits = explode(' ', $hashAndFile);
+                $splits = \explode(' ', $hashAndFile);
                 $hash = $splits[0];
                 $this->connection->updateHash($id, $hash);
             }

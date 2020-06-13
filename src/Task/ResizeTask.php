@@ -38,35 +38,38 @@ class ResizeTask
     }
 
 
-   private function mkdirs()
-   {
-       $resizedPath = $this->pictureDirectory . '/resized';
-       if (!file_exists($resizedPath . '/')) {
-           mkdir($resizedPath, 0744);
-       }
+    private function mkdirs(): void
+    {
+        $resizedPath = $this->pictureDirectory . '/resized';
+        if (!\file_exists($resizedPath . '/')) {
+            \mkdir($resizedPath, 0744);
+        }
 
-       $thumbsPath = $this->pictureDirectory . '/thumbs';
-       if (!file_exists($thumbsPath . '/')) {
-           mkdir($thumbsPath, 0744);
-       }
-   }
+        $thumbsPath = $this->pictureDirectory . '/thumbs';
+        if (\file_exists($thumbsPath . '/')) {
+            return;
+        }
 
-    private function resizeImagesThumbs()
+        \mkdir($thumbsPath, 0744);
+    }
+
+
+    private function resizeImagesThumbs(): void
     {
         $output = [];
         $cmd = '/usr/local/bin/imgp -x 128x128 ' . $this->pictureDirectory;
-        exec($cmd, $output);
-        exec('mv ' . $this->pictureDirectory . '/*_IMGP.jpg ' . $this->pictureDirectory . '/thumbs/');
-        exec("rename 's/_IMGP//g' " . $this->pictureDirectory . '/thumbs/*.jpg');
+        \exec($cmd, $output);
+        \exec('mv ' . $this->pictureDirectory . '/*_IMGP.jpg ' . $this->pictureDirectory . '/thumbs/');
+        \exec("rename 's/_IMGP//g' " . $this->pictureDirectory . '/thumbs/*.jpg');
     }
 
-    private function resizeImagesHD()
+
+    private function resizeImagesHD(): void
     {
         $output = [];
         $cmd = '/usr/local/bin/imgp -x 1920x1080 ' . $this->pictureDirectory;
-        exec($cmd, $output);
-        exec('mv ' . $this->pictureDirectory . '/*_IMGP.jpg ' . $this->pictureDirectory .'/resized/');
-        exec("rename 's/_IMGP//g' " . $this->pictureDirectory . '/resized/*.jpg');
-
+        \exec($cmd, $output);
+        \exec('mv ' . $this->pictureDirectory . '/*_IMGP.jpg ' . $this->pictureDirectory .'/resized/');
+        \exec("rename 's/_IMGP//g' " . $this->pictureDirectory . '/resized/*.jpg');
     }
 }
