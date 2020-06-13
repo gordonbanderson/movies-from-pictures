@@ -38,7 +38,7 @@ class Runner
 
         switch ($options->getCmd()) {
             case 'hashes':
-                $this->climate->warning('HASHES');
+                $this->climate->out('HASHES');
                 $task = new HashesTask($photoDir);
                 $task->run();
                 exit;

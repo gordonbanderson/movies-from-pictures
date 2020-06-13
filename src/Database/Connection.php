@@ -10,17 +10,25 @@ class Connection
     /**
      * PDO instance
      *
-     * @var \Suilven\MoviesFromPictures\Database\type
+     * @var \PDO
      */
     private $pdo;
 
-    /** @param string $directory path to directory of pics relative to root of the project */
-    public function connect(string $directory): void
+
+    /**
+     * Connection constructor.
+     *
+     * @param string $directory path to directory of pics relative to root of the project */
+
+    public function __construct(string $directory)
     {
-        if ($this->pdo === null) {
-            $this->pdo = new \PDO("sqlite:" . $directory . '/' . self::RELATIVE_PATH_FROM_PIC_DIR_TO_SQLITE_FILE);
-            $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        }
+        $this->pdo = new \PDO("sqlite:" . $directory . '/' . self::RELATIVE_PATH_FROM_PIC_DIR_TO_SQLITE_FILE);
+        $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+    }
+
+
+    public function connect(): void
+    {
         $this->createPhotosTableIfNotExists();
     }
 

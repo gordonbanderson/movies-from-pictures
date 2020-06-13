@@ -30,8 +30,8 @@ class HashesTask
 
     public function run(): void
     {
-        $this->connection = new Connection();
-        $this->connection->connect($this->pictureDirectory);
+        $this->connection = new Connection($this->pictureDirectory);
+        $this->connection->connect();
         $this->addPhotos();
         $this->calculateHashes();
     }
