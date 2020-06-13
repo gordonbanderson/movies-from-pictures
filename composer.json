@@ -38,6 +38,7 @@
     },
     "require": {
         "league\/climate": "^3.5",
-        "splitbrain\/php-cli": "^1.1"
+        "splitbrain\/php-cli": "^1.1",
+        "twig/twig": "^3.0"
     }
 }
