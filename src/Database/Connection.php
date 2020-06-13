@@ -14,11 +14,8 @@ class Connection
      */
     private $pdo;
 
-    /**
-     * return in instance of the PDO object that connects to the SQLite database
-     * @var string $directory path to directory of pics relative to root of the project
-     */
-    public function connect($directory): \PDO
+    /** @param string $directory path to directory of pics relative to root of the project */
+    public function connect(string $directory): void
     {
         if ($this->pdo === null) {
             $this->pdo = new \PDO("sqlite:" . $directory . '/' . self::RELATIVE_PATH_FROM_PIC_DIR_TO_SQLITE_FILE);
@@ -28,11 +25,16 @@ class Connection
     }
 
 
-    public function insertPhoto($path): void
+    /**
+     * Insert a photo from the directory into the database. If it already exists skip the insertion
+     *
+     * @param string $path path to the file, e.g. pics/converted/DSC9823.jpg
+     */
+    public function insertPhoto(string $path): void
     {
         $splits = \explode('/', $path);
         \error_log('PATH:');
-        \error_log(\print_r($splits, 1));
+        \error_log(\print_r($splits, true));
         $filename = \array_pop($splits);
 
         if ($this->photoExists($path)) {
@@ -51,7 +53,12 @@ class Connection
     }
 
 
-    public function getPhotos()
+    /**
+     * Get all of the photos from the database, i.e. all the images in this directory
+     *
+     * @return array<int, array<string, string|int|bool>>
+     */
+    public function getPhotos(): array
     {
         $stmt = $this->pdo->query('SELECT id, filename, hash '
             . 'FROM photos');
@@ -69,11 +76,15 @@ class Connection
     }
 
 
-    public function getPhoto($path)
+    /**
+     * @param string $path path to the file, e.g. pics/converted/DSC9823.jpg
+     * @return array<string, string|int|bool> | bool - either an array representing the photo or false
+     */
+    public function getPhoto(string $path)
     {
         $splits = \explode('/', $path);
         \error_log('PATH:');
-        \error_log(\print_r($splits, 1));
+        \error_log(\print_r($splits, true));
         $filename = \array_pop($splits);
         \error_log('SEARCHING FOR FILENAME=' . $filename);
         $sql = 'SELECT id, filename, hash '
@@ -84,13 +95,17 @@ class Connection
         $stmt->execute();
         $row = $stmt->fetch();
 
-        \error_log('PHOTO ROW FOR ' . $path .': ' . \print_r($row, 1));
+        \error_log('PHOTO ROW FOR ' . $path .': ' . \print_r($row, true));
 
         return $row;
     }
 
 
-    public function photoExists($path)
+    /**
+     * @param string $path path to the file, e.g. pics/converted/DSC9823.jpg
+     * @return bool true if the photo exists, false if not
+     */
+    public function photoExists(string $path): bool
     {
         \error_log('PHOTO EXISTS? ' . $path);
         $photo = $this->getPhoto($path);

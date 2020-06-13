@@ -18,9 +18,10 @@ class HashesTask
 
     /**
      * HashesTask constructor.
+     *
      * @param string $pictureDirectory the relative path to the
      */
-    public function __construct($pictureDirectory)
+    public function __construct(string $pictureDirectory)
     {
         $this->climate = new CLImate();
         $this->pictureDirectory = $pictureDirectory;
@@ -54,7 +55,7 @@ class HashesTask
 
         $this->climate->border();
         foreach ($photos as $photo) {
-            $this->climate->info(print_r($photo, 1));
+            $this->climate->info(\print_r($photo, true));
         }
     }
 }

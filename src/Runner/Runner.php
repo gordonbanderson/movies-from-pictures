@@ -3,6 +3,7 @@
 namespace Suilven\MoviesFromPictures\Runner;
 
 use League\CLImate\CLImate;
+use splitbrain\phpcli\Options;
 use Suilven\MoviesFromPictures\Task\HashesTask;
 use Suilven\MoviesFromPictures\Terminal\TerminalHelper;
 
