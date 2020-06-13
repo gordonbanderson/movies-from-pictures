@@ -4,7 +4,7 @@ namespace Suilven\MoviesFromPictures\Database;
 
 class Connection
 {
-    const RELATIVE_PATH_FROM_PIC_DIR_TO_SQLITE_FILE = 'pics.db';
+    public const RELATIVE_PATH_FROM_PIC_DIR_TO_SQLITE_FILE = 'pics.db';
 
 
     /**
@@ -16,6 +16,7 @@ class Connection
 
     /**
      * return in instance of the PDO object that connects to the SQLite database
+     * @var string $directory path to directory of pics relative to root of the project
      */
     public function connect($directory): \PDO
     {
