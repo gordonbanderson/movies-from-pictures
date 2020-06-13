@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types = 1);
+
 /**
  * Created by PhpStorm.
  * User: gordon
@@ -15,7 +16,6 @@ use SilverStripe\Security\Security;
 use Suilven\Flickr\Helper\FlickrPerceptiveHashHelper;
 use Suilven\Flickr\Helper\FlickrSetHelper;
 
-
 class CreatePerceptiveHashBuckets extends BuildTask
 {
 
@@ -23,9 +23,9 @@ class CreatePerceptiveHashBuckets extends BuildTask
 
     protected $description = 'Create buckets based on perceptive hash';
 
-    private static $segment = 'buckets-from-perceptive-hash';
-
     protected $enabled = true;
+
+    private static $segment = 'buckets-from-perceptive-hash';
 
     public function run($request)
     {
@@ -42,17 +42,12 @@ class CreatePerceptiveHashBuckets extends BuildTask
 
         $pHashHelper = new FlickrPerceptiveHashHelper();
         $bucketsArrary = $pHashHelper->findSequences($flickrSet);
-        print_r($bucketsArrary);
+        \print_r($bucketsArrary);
 
         $buckets = $flickrSet->FlickrBuckets();
-        error_log($buckets->Count());
-        if ($buckets->Count() == 0) {
-
+        \error_log($buckets->Count());
+        if ($buckets->Count() !== 0) {
+            return;
         }
-
-
     }
-
-
-
 }

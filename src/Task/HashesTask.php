@@ -1,20 +1,16 @@
-<?php
-
+<?php declare(strict_types = 1);
 
 namespace Suilven\MoviesFromPictures\Task;
 
-
 use League\CLImate\CLImate;
-use splitbrain\phpcli\Options;
 use Suilven\MoviesFromPictures\Database\Connection;
-use Suilven\MoviesFromPictures\Terminal\TerminalHelper;
 
 class HashesTask
 {
     /** @var \League\CLImate\CLImate */
     private $climate;
 
-    /** @var Connection */
+    /** @var \Suilven\MoviesFromPictures\Database\Connection */
     private $connection;
 
     /** @var string */
@@ -26,7 +22,8 @@ class HashesTask
         $this->pictureDirectory = $pictureDirectory;
     }
 
-    public function run()
+
+    public function run(): void
     {
         $this->connection = new Connection();
         $this->connection->connect($this->pictureDirectory);
@@ -35,30 +32,25 @@ class HashesTask
     }
 
 
-    private function addPhotos()
+    private function addPhotos(): void
     {
         $path = $this->pictureDirectory . '/*.jpg';
         $this->climate->info('PATH: ' . $path);
-        $files =  glob($path);
-        foreach($files as $file) {
+        $files = \glob($path);
+        foreach ($files as $file) {
             #$this->climate->info($file);
             $this->connection->insertPhoto($file);
         }
     }
 
 
-    private function calculateHashes()
+    private function calculateHashes(): void
     {
         $photos = $this->connection->getPhotos();
 
         $this->climate->border();
-        foreach($photos as $photo)
-        {
+        foreach ($photos as $photo) {
             //$this->climate->info(print_r($photo, 1));
         }
-
     }
-
-
-
 }

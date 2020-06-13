@@ -1,16 +1,14 @@
-<?php
-
+<?php declare(strict_types = 1);
 
 namespace Suilven\MoviesFromPictures\Runner;
 
-
 use League\CLImate\CLImate;
-use splitbrain\phpcli\Options;
 use Suilven\MoviesFromPictures\Task\HashesTask;
 use Suilven\MoviesFromPictures\Terminal\TerminalHelper;
 
 class Runner
 {
+
     use TerminalHelper;
 
     /** @var \League\CLImate\CLImate */
@@ -23,10 +21,7 @@ class Runner
     }
 
 
-    /**
-     * @param Options $options
-     */
-    public function run($options)
+    public function run(Options $options): void
     {
         $this->climate->bold('Make movies from motordrive pics');
 
@@ -34,11 +29,11 @@ class Runner
         $this->climate->green($options->getCmd());
 
         $this->climate->border();
-        error_log('ARGS');
-        var_dump($options->getArgs());
+        \error_log('ARGS');
+        \var_dump($options->getArgs());
 
         $photoDir = $options->getArgs()[0];
-        $photoDir = rtrim($photoDir, '/');
+        $photoDir = \rtrim($photoDir, '/');
 
         switch ($options->getCmd()) {
             case 'hashes':
