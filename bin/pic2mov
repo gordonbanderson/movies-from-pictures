@@ -1,0 +1,48 @@
+#!/usr/bin/env php
+<?php
+
+if (is_file(__DIR__.'/../vendor/autoload.php') === true) {
+    include_once __DIR__.'/../vendor/autoload.php';
+} else {
+    error_log('ERROR: Autoload file could not be found');
+    exit(1);
+}
+
+class MovieMakerCLI extends \splitbrain\phpcli\CLI
+{
+    // register options and arguments
+    protected function setup(\splitbrain\phpcli\Options $options)
+    {
+        $options->setHelp('Calculate perceptive hashes for a directory of images, and make a movie from them');
+        $options->registerOption('version', 'print version', 'v');
+
+        $options->registerArgument('photo-dir', 'Directory where the images reside', true);
+
+
+        $options->registerCommand('hashes', 'Calculate the perceptive hashes for a directory of photographs');
+        $options->registerCommand('resize', 'Create thumbs and HD sized images from original camera images');
+    }
+
+
+
+    /**
+     * Your main program
+     *
+     * Arguments and options have been parsed when this is run
+     *
+     * @param Options $options
+     * @return void
+     */
+    protected function main(\splitbrain\phpcli\Options $options)
+    {
+        $runner = new Suilven\MoviesFromPictures\Runner\Runner();
+        $exitCode = $runner->run($options);
+        exit($exitCode);
+
+
+    }
+}
+// execute it
+$cli = new MovieMakerCLI();
+$cli->run();
+
