@@ -5,6 +5,7 @@ namespace Suilven\MoviesFromPictures\Task;
 use League\CLImate\CLImate;
 use Suilven\MoviesFromPictures\Database\Connection;
 use Suilven\MoviesFromPictures\Terminal\TerminalHelper;
+use Symfony\Component\Yaml\Yaml;
 
 class HashGroupingTask
 {
@@ -39,6 +40,14 @@ class HashGroupingTask
         $buckets = $this->groupByHash();
         \error_log(\print_r($buckets, true));
         $this->generateHTML($buckets);
+        $this->generateYAML($buckets);
+    }
+
+
+    private function generateYAML($buckets)
+    {
+        $yaml = Yaml::dump($buckets, 2, 2);
+        file_put_contents('video.yml', $yaml);
     }
 
 
@@ -78,17 +87,20 @@ class HashGroupingTask
         $currentBucket = [];
         $buckets = [];
         for ($i = 1; $i < \count($photos) - 1; $i++) {
+            $id = $photos[$i]['id'];
+
             $this->climate->info('Checking file ' . $photos[$i]['filename']);
+
             // if the bucket is empty, start with the current image
             if (\sizeof($currentBucket) === 0) {
                 $currentBucket[] = [
+                    'id' => $id,
                     'filename' => $photos[$i]['filename'],
                    // 'rotated' => $hashes[$i]['Rotated']
                 ];
             }
             $hash0 = $photos[$i]['hash'];
             $hash1 = $photos[$i + 1]['hash'];
-            $id = $photos[$i]['id'];
             $distance = $this->hammingDist($hash0, $hash1);
 
             $this->climate->info($i . ': D=' . $distance);
@@ -97,7 +109,7 @@ class HashGroupingTask
             if ($distance < $tolerance) {
                 $currentBucket[] = [
                     'id' => $id,
-                    'filename' => $photos[$i]['filename'],
+                    'filename' => $photos[$i+1]['filename'],
                     //'rotated' => $photos[$i]['Rotated']
                 ];
             } else {
