@@ -55,7 +55,18 @@ class HashesTask
 
         $this->climate->border();
         foreach ($photos as $photo) {
-            $this->climate->info(\print_r($photo, true));
+            $id = $photo['id'];
+
+
+            $cmd = '/usr/local/bin/blockhash.py ' . $this->pictureDirectory . '/' . $photo['filename'];
+            $this->climate->info($cmd);
+            $output = [];
+            exec($cmd, $output);
+            error_log(print_r($output, true));
+            $hashAndFile = $output[0];
+            $splits = explode(' ', $hashAndFile);
+            $hash = $splits[0];
+            error_log('HASH: ' . $hash);
         }
     }
 }

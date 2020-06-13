@@ -5,6 +5,7 @@ namespace Suilven\MoviesFromPictures\Runner;
 use League\CLImate\CLImate;
 use splitbrain\phpcli\Options;
 use Suilven\MoviesFromPictures\Task\HashesTask;
+use Suilven\MoviesFromPictures\Task\ResizeTask;
 use Suilven\MoviesFromPictures\Terminal\TerminalHelper;
 
 class Runner
@@ -40,6 +41,11 @@ class Runner
             case 'hashes':
                 $this->climate->out('HASHES');
                 $task = new HashesTask($photoDir);
+                $task->run();
+                exit;
+            case 'resize':
+                $this->climate->out('RESIZE');
+                $task = new ResizeTask($photoDir);
                 $task->run();
                 exit;
             default:

@@ -20,6 +20,7 @@ class MovieMakerCLI extends \splitbrain\phpcli\CLI
 
 
         $options->registerCommand('hashes', 'Calculate the perceptive hashes for a directory of photographs');
+        $options->registerCommand('resize', 'Create thumbs and HD sized images from original camera images');
     }
 
 
