@@ -8,9 +8,12 @@
         ul {
             list-style-type: none;
             clear: both;
+            padding-bottom: 50px;
         }
         li {
             float: left;
+            display: inline-block;
+            padding-right: 4px;
         }
     </style>
 </head>
@@ -18,7 +21,6 @@
 <h1>{{ title }}</h1>
 
 {% for bucket in buckets %}
-<hr/>
     <ul>
     {% for photo in bucket %}
         <li><img src="./thumbs/{{  photo.filename }}" /></li>

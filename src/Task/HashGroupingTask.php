@@ -71,7 +71,7 @@ class HashGroupingTask
         $photos = $this->connection->getPhotos();
 
 
-        $tolerance = 50;
+        $tolerance = 75;
         $minLength = 3;
 
 
