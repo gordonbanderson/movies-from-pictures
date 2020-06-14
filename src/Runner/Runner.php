@@ -4,6 +4,7 @@ namespace Suilven\MoviesFromPictures\Runner;
 
 use League\CLImate\CLImate;
 use splitbrain\phpcli\Options;
+use Suilven\MoviesFromPictures\Task\CreateVideoTask;
 use Suilven\MoviesFromPictures\Task\HashesTask;
 use Suilven\MoviesFromPictures\Task\HashGroupingTask;
 use Suilven\MoviesFromPictures\Task\ResizeTask;
@@ -52,6 +53,11 @@ class Runner
             case 'grouping':
                 $this->climate->out('GROUPING');
                 $task = new HashGroupingTask($photoDir);
+                $task->run();
+                exit;
+            case 'video':
+                $this->climate->out('VIDEO');
+                $task = new CreateVideoTask($photoDir);
                 $task->run();
                 exit;
             default:
