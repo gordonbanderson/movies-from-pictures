@@ -2,8 +2,8 @@
 
 namespace Suilven\MoviesFromPictures\Runner;
 
+use Garden\Cli\Args;
 use League\CLImate\CLImate;
-use splitbrain\phpcli\Options;
 use Suilven\MoviesFromPictures\Task\CreateVideoTask;
 use Suilven\MoviesFromPictures\Task\HashesTask;
 use Suilven\MoviesFromPictures\Task\HashGroupingTask;
@@ -25,21 +25,22 @@ class Runner
     }
 
 
-    public function run(Options $options): void
+    /**
+     * @param Args $args
+     */
+    public function run($args): void
     {
         $this->climate->bold('Make movies from motordrive pics');
 
-        $this->climate->black()->bold('COMMANDS:');
-        $this->climate->green($options->getCmd());
 
         $this->climate->border();
         \error_log('ARGS');
-        \var_dump($options->getArgs());
+        \var_dump($args);
 
-        $photoDir = $options->getArgs()[0];
+        $photoDir = $args->getArg('photoDir');
         $photoDir = \rtrim($photoDir, '/');
 
-        switch ($options->getCmd()) {
+        switch ($args->getCommand()) {
             case 'hashes':
                 $this->climate->out('HASHES');
                 $task = new HashesTask($photoDir);
@@ -52,7 +53,10 @@ class Runner
                 exit;
             case 'grouping':
                 $this->climate->out('GROUPING');
-                $task = new HashGroupingTask($photoDir);
+                $tolerance = $args->getOpt('tolerance', 75);
+                $length = $args->getOpt('length', 3);
+
+                $task = new HashGroupingTask($photoDir, $tolerance, $length);
                 $task->run();
                 exit;
             case 'video':
