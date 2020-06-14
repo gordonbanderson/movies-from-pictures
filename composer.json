@@ -39,6 +39,7 @@
     "require": {
         "league\/climate": "^3.5",
         "splitbrain\/php-cli": "^1.1",
-        "twig/twig": "^3.0"
+        "twig/twig": "^3.0",
+        "symfony/yaml": "^5.1"
     }
 }
