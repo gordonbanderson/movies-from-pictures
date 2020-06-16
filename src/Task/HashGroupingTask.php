@@ -55,7 +55,13 @@ class HashGroupingTask
 
     private function generateYAML($buckets)
     {
-        $yaml = Yaml::dump($buckets, 2, 2);
+        $bucketsWithoutCards = [];
+        foreach($buckets as $bucket)
+        {
+            $yamlBucket = ['bucket' => $bucket];
+            $bucketsWithoutCards[] = $yamlBucket;
+        }
+        $yaml = Yaml::dump($bucketsWithoutCards, 2, 2);
         file_put_contents('video.yml', $yaml);
     }
 

@@ -49,16 +49,33 @@ class CreateVideoTask
         $photosTXT = "";
 
         error_log('SEQUENCE');
-        var_dump($sequence);
 
         // @todo Add alternatives such as info card later
-        foreach($sequence as $bucket)
+        foreach($sequence as $row)
         {
-            foreach($bucket as $photo)
+
+            error_log('ROW KEYS:' . $row);
+            $keys = array_keys($row);
+            error_log(print_r($keys, true));
+
+            foreach($keys as $key)
             {
-                $photosTXT .= $this->pictureDirectory . '/resized/' . $photo['filename'];
-                $photosTXT .= "\n";
+                switch($key) {
+                    case 'bucket':
+                        foreach($row['bucket'] as $photo)
+                        {
+                            error_log('SINGLE PHOTO');
+                            error_log(print_r($photo, true));
+                           
+
+                            $photosTXT .= $this->pictureDirectory . '/resized/' . $photo['filename'];
+                            $photosTXT .= "\n";
+                        }
+                }
             }
+
+
+
         }
 
         echo $photosTXT;

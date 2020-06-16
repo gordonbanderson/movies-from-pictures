@@ -51,10 +51,8 @@ class MovieMakerCLI
                 false, 'integer')
 
             ->command('video')
-            ->description('Push data to a remote server.')
+            ->description('Make a video from the image frames based on the identified sequences')
             ->opt('frame-rate:f', 'The number of frames per sec in the final video', false, 'integer')
-            ->opt('set-upstream:u', 'Add a reference to the upstream repo.', false, 'boolean')
-
 
             ->command('*')
             ->arg('photoDir', 'Relative or absolute path to the photographs', true);
