@@ -63,7 +63,7 @@ class HashesTask
         $this->borderedTitle('Calculationg hash for ' . $amount . ' images');
         $progress = $this->climate->progress()->total($amount);
         foreach ($photos as $photo) {
-            $id = $photo['id'];
+            $id = (int) $photo['id'];
             // @phpstan-ignore-next-line @todo Fix this
             if (\is_null($photo['hash'])) {
                 $cmd = '/usr/local/bin/blockhash.py ' . $this->pictureDirectory . '/thumbs/' . $photo['filename'];

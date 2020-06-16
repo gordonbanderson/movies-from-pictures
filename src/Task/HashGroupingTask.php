@@ -21,15 +21,24 @@ class HashGroupingTask
     /** @var string */
     private $pictureDirectory;
 
+    private $tolerance;
+
+    private $length;
+
     /**
      * HashesTask constructor.
      *
      * @param string $pictureDirectory the relative path to the
      */
-    public function __construct(string $pictureDirectory)
+    public function __construct(string $pictureDirectory, $tolerance, $length)
     {
         $this->climate = new CLImate();
         $this->pictureDirectory = $pictureDirectory;
+        $this->tolerance = $tolerance;
+        $this->length = $length;
+
+        error_log('LENGTH: ' . $this->length);
+        error_log('TOLERANCE: ' . $this->tolerance);
     }
 
 
@@ -46,7 +55,13 @@ class HashGroupingTask
 
     private function generateYAML($buckets)
     {
-        $yaml = Yaml::dump($buckets, 2, 2);
+        $bucketsWithoutCards = [];
+        foreach($buckets as $bucket)
+        {
+            $yamlBucket = ['bucket' => $bucket];
+            $bucketsWithoutCards[] = $yamlBucket;
+        }
+        $yaml = Yaml::dump($bucketsWithoutCards, 2, 2);
         file_put_contents('video.yml', $yaml);
     }
 
@@ -80,9 +95,6 @@ class HashGroupingTask
         $photos = $this->connection->getPhotos();
 
 
-        $tolerance = 75;
-        $minLength = 3;
-
 
         $currentBucket = [];
         $buckets = [];
@@ -106,7 +118,7 @@ class HashGroupingTask
             $this->climate->info($i . ': D=' . $distance);
 
             // if we are within tolerance, add to the bucket
-            if ($distance < $tolerance) {
+            if ($distance < $this->tolerance) {
                 $currentBucket[] = [
                     'id' => $id,
                     'filename' => $photos[$i+1]['filename'],
@@ -114,7 +126,7 @@ class HashGroupingTask
                 ];
             } else {
                 // we need to save the current bucket if it's long enough
-                if (\sizeof($currentBucket) < $minLength) {
+                if (\sizeof($currentBucket) < $this->length) {
                     $this->climate->blue('Bucket created but is too short');
                 } else {
                     $this->climate->blue('Adding bucket of size ' . \sizeof($currentBucket));
@@ -125,7 +137,7 @@ class HashGroupingTask
         }
 
         // add the last bucket if it's long enough
-        if (\sizeof($currentBucket) < $minLength) {
+        if (\sizeof($currentBucket) < $this->length) {
             \error_log('Bucket created but is too short');
         } else {
             \error_log('Adding bucket');
