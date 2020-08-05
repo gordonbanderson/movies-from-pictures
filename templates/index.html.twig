@@ -18,7 +18,7 @@
 {% for bucket in buckets %}
     <div class="bucket">
     {% for photo in bucket %}
-        <img src="./thumbs/{{  photo.filename }}" />
+       <img src="./thumbs/{{  photo.filename }}" title="{{  photo.filename }}"/>
     {% endfor %}
     </div>
 
