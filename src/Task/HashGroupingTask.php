@@ -56,8 +56,16 @@ class HashGroupingTask
     private function generateYAML($buckets): void
     {
         $bucketsWithoutCards = [];
+        $i = 0;
+
         foreach ($buckets as $bucket) {
+            $i++;
+            $card = [
+                'title' => 'title_' . $i,
+                'message' => 'message_' . $i
+            ];
             $yamlBucket = ['bucket' => $bucket];
+            $bucketsWithoutCards[] = ['card' => $card];
             $bucketsWithoutCards[] = $yamlBucket;
         }
         $yaml = Yaml::dump($bucketsWithoutCards, Yaml::DUMP_OBJECT_AS_MAP);

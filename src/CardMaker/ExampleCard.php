@@ -47,7 +47,7 @@ class ExampleCard
         $this->writeText($img, $this->title, 970,100, 96);
         $this->writeText($img, $this->message, 970,800, 48);
 
-        $cardFile = 'card_' . str_pad($this->number . '', 5, '0', STR_PAD_LEFT)  . '.png';
+        $cardFile = getcwd() . '/output/card_' . str_pad($this->number . '', 5, '0', STR_PAD_LEFT)  . '.png';
 
         $img->save($cardFile);
 
