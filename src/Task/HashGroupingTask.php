@@ -61,7 +61,7 @@ class HashGroupingTask
             $bucketsWithoutCards[] = $yamlBucket;
         }
         $yaml = Yaml::dump($bucketsWithoutCards, Yaml::DUMP_OBJECT_AS_MAP);
-        \file_put_contents('video.yml', $yaml);
+        \file_put_contents('output/video.yml', $yaml);
     }
 
 

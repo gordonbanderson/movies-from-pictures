@@ -48,10 +48,10 @@ class CreateVideoTask
 
         // taken from https://www.youtube.com/watch?v=3PRZ9L_KLdI&list=PLcUid3OP_4OWC-GJ6KfHK7dIK_yRKKn0e&index=4&t=0s,
         // 11m 34s
-        $meltCMD = 'xvfb-run -a melt -consumer avformat:timelapse.avi vcodec=libxvid b=5000k';
+        $meltCMD = 'xvfb-run -a melt -consumer avformat:output/timelapse.avi vcodec=libxvid b=5000k';
 
         // @todo Fix, needs to be under picture dir
-        $yaml = file_get_contents(getcwd() .'/video.yml');
+        $yaml = file_get_contents(getcwd() .'/output/video.yml');
         $sequence = Yaml::parse($yaml);
 
         error_log('SEQUENCE');
@@ -100,7 +100,7 @@ class CreateVideoTask
                         $card->setNumber($sequenceNumber);
                         $card->generate();
 
-                        $cardFile = 'card_' . str_pad($sequenceNumber . '', 5, '0',
+                        $cardFile = getcwd() . '/output/card_' . str_pad($sequenceNumber . '', 5, '0',
                                 STR_PAD_LEFT)  . '.png';
 
                         $meltCMD .= ' ' . $cardFile . ' length=50' ;
@@ -117,11 +117,11 @@ class CreateVideoTask
             echo $photosTXT;
 
             // @todo Fix path
-            file_put_contents(getcwd() . '/photos.txt', $photosTXT);
+            file_put_contents(getcwd() . '/output/photos.txt', $photosTXT);
 
             // @todo Fix path
-            $bucketFile = 'bucket_' . str_pad($sequenceNumber . '', 5, '0', STR_PAD_LEFT)  . '.avi';
-            $cmd = 'mencoder "mf://@' . getcwd() . '/photos.txt" -mf fps=12 -o ' . $bucketFile . ' -vf scale=1920:1080 -ovc lavc -lavcopts vcodec=mpeg4:vbitrate=13660000';
+            $bucketFile = './output/bucket_' . str_pad($sequenceNumber . '', 5, '0', STR_PAD_LEFT)  . '.avi';
+            $cmd = 'mencoder "mf://@' . getcwd() . '/output/photos.txt" -mf fps=12 -o ' . $bucketFile . ' -vf scale=1920:1080 -ovc lavc -lavcopts vcodec=mpeg4:vbitrate=13660000';
             exec($cmd);
             $meltCMD .= ' ' . $bucketFile;
             if ($sequenceNumber > 1) {
