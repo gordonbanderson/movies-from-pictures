@@ -25,7 +25,7 @@ class ResizeTask
      * @param string $pictureDirectory the relative path to the
      * @param string $size The image size in a format like 1920x1080 or a reference to a name, e.g. HD720, VGA
      */
-    public function __construct(string $pictureDirectory, $size)
+    public function __construct(string $pictureDirectory, $size = '1920x1080')
     {
         $this->climate = new CLImate();
         $this->pictureDirectory = $pictureDirectory;

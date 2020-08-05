@@ -37,8 +37,8 @@ class HashGroupingTask
         $this->tolerance = $tolerance;
         $this->length = $length;
 
-        error_log('LENGTH: ' . $this->length);
-        error_log('TOLERANCE: ' . $this->tolerance);
+        \error_log('LENGTH: ' . $this->length);
+        \error_log('TOLERANCE: ' . $this->tolerance);
     }
 
 
@@ -53,24 +53,23 @@ class HashGroupingTask
     }
 
 
-    private function generateYAML($buckets)
+    private function generateYAML($buckets): void
     {
         $bucketsWithoutCards = [];
-        foreach($buckets as $bucket)
-        {
+        foreach ($buckets as $bucket) {
             $yamlBucket = ['bucket' => $bucket];
             $bucketsWithoutCards[] = $yamlBucket;
         }
-        $yaml = Yaml::dump($bucketsWithoutCards, 2, 2);
-        file_put_contents('video.yml', $yaml);
+        $yaml = Yaml::dump($bucketsWithoutCards, Yaml::DUMP_OBJECT_AS_MAP);
+        \file_put_contents('video.yml', $yaml);
     }
 
 
-    private function generateHTML($buckets)
+    private function generateHTML($buckets): void
     {
-        error_log('BUCKET SIZE: ' . sizeof($buckets));
+        \error_log('BUCKET SIZE: ' . \sizeof($buckets));
 
-        $loader = new \Twig\Loader\FilesystemLoader(getcwd() . '/templates');
+        $loader = new \Twig\Loader\FilesystemLoader(\getcwd() . '/templates');
         $twig = new \Twig\Environment($loader, [
             'cache' => '/tmp/twig',
         ]);
@@ -79,11 +78,11 @@ class HashGroupingTask
         $html = $twig->render('index.html.twig', [
             'title' => 'Buckets List',
             'buckets' => $buckets,
-            'pictureDirectory' => $this->pictureDirectory
+            'pictureDirectory' => $this->pictureDirectory,
         ]);
 
         $path = $this->pictureDirectory . '/grouping.html';
-        file_put_contents($path, $html);
+        \file_put_contents($path, $html);
     }
 
 
@@ -93,8 +92,6 @@ class HashGroupingTask
         $this->borderedTitle('Grouping by Perceptive Hash');
 
         $photos = $this->connection->getPhotos();
-
-
 
         $currentBucket = [];
         $buckets = [];
@@ -120,7 +117,7 @@ class HashGroupingTask
             // if we are within tolerance, add to the bucket
             if ($distance < $this->tolerance) {
                 $currentBucket[] = [
-                    'id' => $id,
+                    'id' => $photos[$i+1]['id'],
                     'filename' => $photos[$i+1]['filename'],
                     //'rotated' => $photos[$i]['Rotated']
                 ];
