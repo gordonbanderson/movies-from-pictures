@@ -100,22 +100,22 @@ class ResizeTask
     }
 
 
+    // @todo case sensitivy on the JPGs
+
     private function resizeImagesThumbs(): void
     {
-        $output = [];
         $cmd = '/usr/local/bin/imgp -x 128x128 ' . $this->pictureDirectory;
-        \exec($cmd, $output);
-        \exec('mv ' . $this->pictureDirectory . '/*_IMGP.jpg ' . $this->pictureDirectory . '/thumbs/');
-        \exec("rename 's/_IMGP//g' " . $this->pictureDirectory . '/thumbs/*.jpg');
+        \exec($cmd);
+        \exec('mv ' . $this->pictureDirectory . '/*_IMGP.JPG ' . $this->pictureDirectory . '/thumbs/');
+        \exec("rename 's/_IMGP//g' " . $this->pictureDirectory . '/thumbs/*.JPG');
     }
 
 
     private function resizeImagesHD(): void
     {
-        $output = [];
         $cmd = '/usr/local/bin/imgp -x ' . $this->pictureSize . ' ' . $this->pictureDirectory;
-        \exec($cmd, $output);
-        \exec('mv ' . $this->pictureDirectory . '/*_IMGP.jpg ' . $this->pictureDirectory .'/resized/');
-        \exec("rename 's/_IMGP//g' " . $this->pictureDirectory . '/resized/*.jpg');
+        \exec($cmd);
+        \exec('mv ' . $this->pictureDirectory . '/*_IMGP.JPG ' . $this->pictureDirectory .'/resized/');
+        \exec("rename 's/_IMGP//g' " . $this->pictureDirectory . '/resized/*.JPG');
     }
 }

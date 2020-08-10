@@ -43,7 +43,7 @@ class HashesTask
 
     private function addPhotos(): void
     {
-        $path = $this->pictureDirectory . '/*.jpg';
+        $path = $this->pictureDirectory . '/*.JPG';
         $this->climate->info('PATH: ' . $path);
         $files = \glob($path);
         foreach ($files as $file) {

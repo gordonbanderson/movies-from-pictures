@@ -69,18 +69,38 @@ class CreateVideoTask
 
             $photosTXT = "";
 
+            $isVertical = false;
+            $width = 0;
+            $height = 0;
+
             foreach($keys as $key)
             {
                 switch($key) {
                     case 'bucket':
+                        $ctr = 0;
                         foreach($row['bucket'] as $photo)
                         {
-                            error_log('SINGLE PHOTO');
+                            $ctr++;
+                            error_log('SINGLE PHOTO ' . $ctr);
                             error_log(print_r($photo, true));
 
+                            $photoFile = $this->pictureDirectory . '/resized/' . $photo['filename'];
 
-                            $photosTXT .= $this->pictureDirectory . '/resized/' . $photo['filename'];
+                            $photosTXT .= $photoFile;
                             $photosTXT .= "\n";
+
+                            // all images should be the same orientation and size, as such only get this info for
+                            // the first image
+                            if ($ctr === 1) {
+                                $width = $this->getWidth($photoFile);
+                                $height = $this->getHeight($photoFile);
+                                $isVertical = $this->isVertical($photoFile);
+                                if ($isVertical) {
+                                    $temp = $width;
+                                    $width = $height;
+                                    $height = $temp;
+                                }
+                            }
                         }
                         break;
 
@@ -114,23 +134,39 @@ class CreateVideoTask
             }
 
 
-            echo $photosTXT;
+            $this->climate->border('****^');
+            $this->climate->info($photosTXT);
+            $this->climate->border();
+
+            $this->climate->underline($width . ' x ' . $height .', V=' . $isVertical);
+            $photosTXT = trim($photosTXT);
 
             // @todo Fix path
             file_put_contents(getcwd() . '/output/photos.txt', $photosTXT);
 
-            // @todo Fix path
-            $bucketFile = './output/bucket_' . str_pad($sequenceNumber . '', 5, '0', STR_PAD_LEFT)  . '.avi';
-            $cmd = 'mencoder "mf://@' . getcwd() . '/output/photos.txt" -mf fps=12 -o ' . $bucketFile . ' -vf scale=1920:1080 -ovc lavc -lavcopts vcodec=mpeg4:vbitrate=13660000';
-            exec($cmd);
-            $meltCMD .= ' ' . $bucketFile;
-            if ($sequenceNumber > 1) {
-                $meltCMD .= ' -mix 2 -mixer luma';
+            error_log('SIZE: ' . strlen($photosTXT));
+
+            if (strlen($photosTXT) > 0) {
+                // @todo Fix path
+                $bucketFile = './output/bucket_' . str_pad($sequenceNumber . '', 5, '0', STR_PAD_LEFT)  . '.avi';
+                $cmd = 'mencoder "mf://@' . getcwd() . '/output/photos.txt" -mf fps=12 -o ' . $bucketFile . ' -vf scale=1920:1620 -ovc lavc -lavcopts vcodec=mpeg4:vbitrate=13660000';
+                $this->climate->border();
+                $this->climate->blue($cmd);
+                $this->climate->border();
+                exec($cmd);
+
+                if ($isVertical) {
+                    $cmd = 'ffmpeg -i ' . $bucketFile .' -vf "transpose=2" output/rotated.avi';
+                    exec($cmd);
+                    exec('mv output/rotated.avi ' . $bucketFile);
+                }
+                $meltCMD .= ' ' . $bucketFile;
+                if ($sequenceNumber > 1) {
+                    $meltCMD .= ' -mix 2 -mixer luma';
+                }
             }
 
             $sequenceNumber++;
-
-
         }
 
         $this->climate->border();
@@ -140,6 +176,38 @@ class CreateVideoTask
         file_put_contents('makevideo', $meltCMD);
 
         exec($meltCMD);
+    }
+
+
+    private function getWidth($relativeFilePath)
+    {
+        $cmd = 'exiftool ' . $relativeFilePath . " | grep 'Image Width' | tail -1";
+        $output = shell_exec($cmd);
+        $splits = explode(':', $output);
+        $width = intval($splits[1]);
+        return $width;
+    }
+
+    private function getHeight($relativeFilePath)
+    {
+        $cmd = 'exiftool ' . $relativeFilePath . " | grep 'Image Height' | tail -1";
+        $output = shell_exec($cmd);
+        $splits = explode(':', $output);
+        $height = intval($splits[1]);
+        return $height;
+    }
+
+
+    private function isVertical($relativeFilePath)
+    {
+        error_log('**** VERTICAL CHECK ****');
+        $cmd = 'exiftool ' . $relativeFilePath . " | grep 'Camera Orientation'";
+        $output = shell_exec($cmd);
+        $splits = explode(':', $output);
+        $info = ($splits[1]);
+        $start = substr($info, 0,11);
+        error_log('S=*' . $start . '*');
+        return $start !== ' Horizontal';
     }
 
 }

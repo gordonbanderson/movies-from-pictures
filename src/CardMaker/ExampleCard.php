@@ -40,7 +40,7 @@ class ExampleCard
     public function generate()
     {
         /** @var ImageManagerStatic $canvas */
-        $img = $this->manager->canvas(1920, 1080, '#000099');
+        $img = $this->manager->canvas(1620, 1080, '#000099');
         $img->insert('./gradient_srt.png', '',0,0);
 
 

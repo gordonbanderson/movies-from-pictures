@@ -82,7 +82,6 @@ class HashGroupingTask
             'cache' => '/tmp/twig',
         ]);
 
-
         $html = $twig->render('index.html.twig', [
             'title' => 'Buckets List',
             'buckets' => $buckets,

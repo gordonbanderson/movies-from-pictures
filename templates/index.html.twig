@@ -17,8 +17,9 @@
 
 {% for bucket in buckets %}
     <div class="bucket">
+        <h6>{{  loop.index }}</h6>
     {% for photo in bucket %}
-       <img src="./thumbs/{{  photo.filename }}" title="{{  photo.filename }}"/>
+        <a href="./{{ photo.filename }}" target="_blank"><img src="./thumbs/{{  photo.filename }}" title="{{  photo.filename }}"/></a>
     {% endfor %}
     </div>
 

@@ -37,7 +37,6 @@ bin/pic2mov grouping pics/converted
 
   --length, -l      The minimum number of frames to renders as a sequence
                     (default 5)
-  --port, -P        Port number to use.
   --tolerance, -t   Max Hamming distance to constitue an image match of a
                     sequence (default 50)
 
